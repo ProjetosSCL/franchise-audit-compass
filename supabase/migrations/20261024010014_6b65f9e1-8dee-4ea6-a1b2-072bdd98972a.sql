@@ -1,0 +1,4 @@
+CREATE POLICY "scl_private_files_read" ON storage.objects FOR SELECT TO authenticated USING (bucket_id IN ('source-files', 'contestation-exports') AND auth.uid() IS NOT NULL);
+CREATE POLICY "scl_private_files_upload" ON storage.objects FOR INSERT TO authenticated WITH CHECK (bucket_id IN ('source-files', 'contestation-exports') AND auth.uid() IS NOT NULL);
+CREATE POLICY "scl_private_files_update" ON storage.objects FOR UPDATE TO authenticated USING (bucket_id IN ('source-files', 'contestation-exports') AND auth.uid() IS NOT NULL) WITH CHECK (bucket_id IN ('source-files', 'contestation-exports') AND auth.uid() IS NOT NULL);
+CREATE POLICY "scl_private_files_delete" ON storage.objects FOR DELETE TO authenticated USING (bucket_id IN ('source-files', 'contestation-exports') AND auth.uid() IS NOT NULL);
