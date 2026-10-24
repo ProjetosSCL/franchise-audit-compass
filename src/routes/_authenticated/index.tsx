@@ -67,7 +67,9 @@ function lastMonths(count: number): string[] {
 }
 
 function formatMonthLabel(month: string): string {
-  const [year, m] = month.split("-").map(Number);
+  const parts = month.split("-");
+  const year = Number(parts[0]);
+  const m = Number(parts[1]);
   return new Intl.DateTimeFormat("pt-BR", {
     month: "long",
     year: "numeric",
