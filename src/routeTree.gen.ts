@@ -13,6 +13,11 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
+import { Route as AuthenticatedConfiguracoesRouteImport } from './routes/_authenticated/configuracoes'
+import { Route as AuthenticatedContestacaoRouteImport } from './routes/_authenticated/contestacao'
+import { Route as AuthenticatedImportarRouteImport } from './routes/_authenticated/importar'
+import { Route as AuthenticatedTendenciaRouteImport } from './routes/_authenticated/tendencia'
+import { Route as AuthenticatedFranquiaFranchiseIdMonthRouteImport } from './routes/_authenticated/franquia.$franchiseId.$month'
 
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
@@ -33,35 +38,99 @@ const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedConfiguracoesRoute =
+  AuthenticatedConfiguracoesRouteImport.update({
+    id: '/configuracoes',
+    path: '/configuracoes',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedContestacaoRoute =
+  AuthenticatedContestacaoRouteImport.update({
+    id: '/contestacao',
+    path: '/contestacao',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedImportarRoute = AuthenticatedImportarRouteImport.update({
+  id: '/importar',
+  path: '/importar',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedTendenciaRoute = AuthenticatedTendenciaRouteImport.update({
+  id: '/tendencia',
+  path: '/tendencia',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedFranquiaFranchiseIdMonthRoute =
+  AuthenticatedFranquiaFranchiseIdMonthRouteImport.update({
+    id: '/franquia/$franchiseId/$month',
+    path: '/franquia/$franchiseId/$month',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
   '/login': typeof LoginRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/configuracoes': typeof AuthenticatedConfiguracoesRoute
+  '/contestacao': typeof AuthenticatedContestacaoRoute
+  '/importar': typeof AuthenticatedImportarRoute
+  '/tendencia': typeof AuthenticatedTendenciaRoute
+  '/franquia/$franchiseId/$month': typeof AuthenticatedFranquiaFranchiseIdMonthRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/configuracoes': typeof AuthenticatedConfiguracoesRoute
+  '/contestacao': typeof AuthenticatedContestacaoRoute
+  '/importar': typeof AuthenticatedImportarRoute
+  '/tendencia': typeof AuthenticatedTendenciaRoute
   '/': typeof AuthenticatedIndexRoute
+  '/franquia/$franchiseId/$month': typeof AuthenticatedFranquiaFranchiseIdMonthRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/login': typeof LoginRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/_authenticated/configuracoes': typeof AuthenticatedConfiguracoesRoute
+  '/_authenticated/contestacao': typeof AuthenticatedContestacaoRoute
+  '/_authenticated/importar': typeof AuthenticatedImportarRoute
+  '/_authenticated/tendencia': typeof AuthenticatedTendenciaRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
+  '/_authenticated/franquia/$franchiseId/$month': typeof AuthenticatedFranquiaFranchiseIdMonthRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/reset-password'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/reset-password'
+    | '/configuracoes'
+    | '/contestacao'
+    | '/importar'
+    | '/tendencia'
+    | '/franquia/$franchiseId/$month'
   fileRoutesByTo: FileRoutesByTo
-  to: '/login' | '/reset-password' | '/'
+  to:
+    | '/login'
+    | '/reset-password'
+    | '/configuracoes'
+    | '/contestacao'
+    | '/importar'
+    | '/tendencia'
+    | '/'
+    | '/franquia/$franchiseId/$month'
   id:
     | '__root__'
     | '/_authenticated'
     | '/login'
     | '/reset-password'
+    | '/_authenticated/configuracoes'
+    | '/_authenticated/contestacao'
+    | '/_authenticated/importar'
+    | '/_authenticated/tendencia'
     | '/_authenticated/'
+    | '/_authenticated/franquia/$franchiseId/$month'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -100,15 +169,61 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/configuracoes': {
+      id: '/_authenticated/configuracoes'
+      path: '/configuracoes'
+      fullPath: '/configuracoes'
+      preLoaderRoute: typeof AuthenticatedConfiguracoesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/contestacao': {
+      id: '/_authenticated/contestacao'
+      path: '/contestacao'
+      fullPath: '/contestacao'
+      preLoaderRoute: typeof AuthenticatedContestacaoRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/importar': {
+      id: '/_authenticated/importar'
+      path: '/importar'
+      fullPath: '/importar'
+      preLoaderRoute: typeof AuthenticatedImportarRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/tendencia': {
+      id: '/_authenticated/tendencia'
+      path: '/tendencia'
+      fullPath: '/tendencia'
+      preLoaderRoute: typeof AuthenticatedTendenciaRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/franquia/$franchiseId/$month': {
+      id: '/_authenticated/franquia/$franchiseId/$month'
+      path: '/franquia/$franchiseId/$month'
+      fullPath: '/franquia/$franchiseId/$month'
+      preLoaderRoute: typeof AuthenticatedFranquiaFranchiseIdMonthRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedConfiguracoesRoute: typeof AuthenticatedConfiguracoesRoute
+  AuthenticatedContestacaoRoute: typeof AuthenticatedContestacaoRoute
+  AuthenticatedImportarRoute: typeof AuthenticatedImportarRoute
+  AuthenticatedTendenciaRoute: typeof AuthenticatedTendenciaRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
+  AuthenticatedFranquiaFranchiseIdMonthRoute: typeof AuthenticatedFranquiaFranchiseIdMonthRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedConfiguracoesRoute: AuthenticatedConfiguracoesRoute,
+  AuthenticatedContestacaoRoute: AuthenticatedContestacaoRoute,
+  AuthenticatedImportarRoute: AuthenticatedImportarRoute,
+  AuthenticatedTendenciaRoute: AuthenticatedTendenciaRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
+  AuthenticatedFranquiaFranchiseIdMonthRoute:
+    AuthenticatedFranquiaFranchiseIdMonthRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
