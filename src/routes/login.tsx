@@ -153,7 +153,7 @@ function Login() {
         </CardContent>
       </Card>
       <p className="fixed bottom-6 text-center text-xs text-muted-foreground">
-        Acesso restrito aos sócios. Cadastro público desativado.
+        Acesso restrito aos sócios.
       </p>
     </div>
   );
