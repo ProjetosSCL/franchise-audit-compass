@@ -25,9 +25,10 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 export const Route = createFileRoute("/_authenticated/")({
   ssr: false,
-  validateSearch: (search: Record<string, unknown>) => ({
-    month: typeof search.month === "string" && /^\d{4}-(0[1-9]|1[0-2])$/.test(search.month) ? search.month : undefined,
-  }),
+  validateSearch: (search: Record<string, unknown>): { month?: string } => {
+    const month = search["month"];
+    return typeof month === "string" && /^\d{4}-(0[1-9]|1[0-2])$/.test(month) ? { month } : {};
+  },
   head: () => ({
     meta: [
       { title: "Painel — SCL Audit" },
