@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
@@ -25,6 +25,9 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 export const Route = createFileRoute("/_authenticated/")({
   ssr: false,
+  validateSearch: (search: Record<string, unknown>) => ({
+    month: typeof search.month === "string" && /^\d{4}-(0[1-9]|1[0-2])$/.test(search.month) ? search.month : undefined,
+  }),
   head: () => ({
     meta: [
       { title: "Painel — SCL Audit" },
@@ -43,13 +46,6 @@ export const Route = createFileRoute("/_authenticated/")({
   }),
   component: Painel,
 });
-
-const STATUS_LABELS: Record<string, string> = {
-  pending: "Pendente",
-  processing: "Processando",
-  processed: "Processado",
-  error: "Erro",
-};
 
 function currentMonth(): string {
   const now = new Date();
@@ -76,17 +72,12 @@ function formatMonthLabel(month: string): string {
   }).format(new Date(year, m - 1, 1));
 }
 
-function formatBRL(value: number | null | undefined): string {
-  if (value == null) return "—";
-  return new Intl.NumberFormat("pt-BR", {
-    style: "currency",
-    currency: "BRL",
-  }).format(value);
-}
-
 function Painel() {
   const dashboardFn = useServerFn(getDashboard);
-  const [month, setMonth] = useState(currentMonth);
+  const navigate = useNavigate({ from: Route.fullPath });
+  const search = Route.useSearch();
+  const [initialMonth] = useState(currentMonth);
+  const month = search.month ?? initialMonth;
   const months = useMemo(() => lastMonths(12), []);
 
   const { data, isLoading, isError, error, refetch } = useQuery({
@@ -95,24 +86,16 @@ function Painel() {
   });
 
   const franchises = data?.franchises ?? [];
-  const periodsForMonth = (data?.periods ?? []).filter(
-    (p) => p.reference_month.slice(0, 7) === month,
-  );
-
-  const totalBase = periodsForMonth.reduce((s, p) => s + Number(p.total_valor_base ?? 0), 0);
-  const totalPago = periodsForMonth.reduce((s, p) => s + Number(p.total_valor_pago ?? 0), 0);
-  const totalDiff = periodsForMonth.reduce((s, p) => s + Number(p.total_difference ?? 0), 0);
-  const openFindings = periodsForMonth.reduce((s, p) => s + (p.open_findings_count ?? 0), 0);
-  const valueAtRisk = periodsForMonth.reduce((s, p) => s + Number(p.value_at_risk ?? 0), 0);
-  const hasAnyPeriod = periodsForMonth.length > 0;
 
   return (
     <div className="mx-auto max-w-6xl space-y-6 p-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <h1 className="text-2xl font-semibold tracking-tight">Painel</h1>
-          <Select value={month} onValueChange={setMonth}>
-            <SelectTrigger className="w-52">
+        <div className="flex flex-wrap items-end gap-6">
+          <h1 className="text-2xl font-semibold">Painel geral</h1>
+          <div className="space-y-2">
+          <p className="text-xs font-medium text-muted-foreground">Mês de referência</p>
+          <Select value={month} onValueChange={(value) => navigate({ search: { month: value }, replace: true })}>
+            <SelectTrigger className="w-52" aria-label="Mês de referência">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -123,6 +106,7 @@ function Painel() {
               ))}
             </SelectContent>
           </Select>
+          </div>
         </div>
         <Button asChild>
           <Link to="/importar">
@@ -146,24 +130,6 @@ function Painel() {
         </Alert>
       ) : null}
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-        {[
-          { label: "Valor base", value: formatBRL(totalBase) },
-          { label: "Valor pago", value: formatBRL(totalPago) },
-          { label: "Diferença", value: formatBRL(totalDiff) },
-          { label: "Achados abertos", value: hasAnyPeriod ? String(openFindings) : "0" },
-          { label: "Valor em risco", value: formatBRL(valueAtRisk) },
-        ].map((item) => (
-          <Card key={item.label}>
-            <CardHeader className="pb-2">
-              <CardDescription>{item.label}</CardDescription>
-              <CardTitle className="text-xl tabular-nums">{item.value}</CardTitle>
-            </CardHeader>
-            <CardContent className="sr-only" />
-          </Card>
-        ))}
-      </div>
-
       {isLoading ? (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {Array.from({ length: 8 }).map((_, i) => (
@@ -178,14 +144,12 @@ function Painel() {
         </div>
       ) : (
         <>
-          {!hasAnyPeriod ? (
-            <p className="rounded-md border bg-muted/40 px-4 py-3 text-sm text-muted-foreground">
-              Nenhuma apuração importada para {formatMonthLabel(month)}.
-            </p>
-          ) : null}
+          <div className="flex items-center justify-between border-b pb-3">
+            <h2 className="text-sm font-medium">Franquias</h2>
+            <span className="text-xs text-muted-foreground">{franchises.length} franquias · {formatMonthLabel(month)}</span>
+          </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {franchises.map((franchise) => {
-              const period = periodsForMonth.find((p) => p.franchise_id === franchise.id);
               return (
                 <Link
                   key={franchise.id}
@@ -195,12 +159,10 @@ function Painel() {
                 >
                   <Card className="h-full transition-colors hover:bg-accent/40">
                     <CardHeader>
-                      <div className="flex items-center justify-between gap-2">
+                      <div className="flex flex-wrap items-center justify-between gap-2">
                         <CardTitle className="text-base">{franchise.display_name}</CardTitle>
-                        <Badge
-                          variant={period?.status === "error" ? "destructive" : "secondary"}
-                        >
-                          {period ? STATUS_LABELS[period.status] ?? period.status : "Não importado"}
+                        <Badge variant="secondary">
+                          Sem dados
                         </Badge>
                       </div>
                       <CardDescription>{franchise.code}</CardDescription>
@@ -208,23 +170,23 @@ function Painel() {
                     <CardContent className="space-y-1 text-sm tabular-nums">
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Valor base</span>
-                        <span>{formatBRL(period?.total_valor_base)}</span>
+                        <span>—</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Valor pago</span>
-                        <span>{formatBRL(period?.total_valor_pago)}</span>
+                        <span>—</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Diferença</span>
-                        <span>{formatBRL(period?.total_difference)}</span>
+                        <span>—</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Achados abertos</span>
-                        <span>{period?.open_findings_count ?? 0}</span>
+                        <span>—</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Valor em risco</span>
-                        <span>{formatBRL(period?.value_at_risk)}</span>
+                        <span>—</span>
                       </div>
                     </CardContent>
                   </Card>

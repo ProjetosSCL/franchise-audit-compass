@@ -1,8 +1,11 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
+import { getDashboard } from "@/lib/dashboard.functions";
 import {
   FileOutput,
+  Building2,
   LayoutDashboard,
   LogOut,
   Settings,
@@ -13,7 +16,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 
 const NAV_ITEMS = [
-  { to: "/", label: "Painel", icon: LayoutDashboard },
+  { to: "/", label: "Painel geral", icon: LayoutDashboard },
   { to: "/importar", label: "Importar", icon: UploadCloud },
   { to: "/tendencia", label: "Tendência", icon: TrendingUp },
   { to: "/contestacao", label: "Contestação", icon: FileOutput },
@@ -25,6 +28,11 @@ export function AppShell({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient();
   const routerState = useRouterState();
   const [email, setEmail] = useState<string | null>(null);
+  const dashboardFn = useServerFn(getDashboard);
+  const { data } = useQuery({ queryKey: ["dashboard"], queryFn: () => dashboardFn() });
+  const searchMonth = routerState.location.search.month;
+  const now = new Date();
+  const month = typeof searchMonth === "string" ? searchMonth : `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => setEmail(data.user?.email ?? null));
@@ -64,6 +72,19 @@ export function AppShell({ children }: { children: ReactNode }) {
               </Link>
             );
           })}
+          <details className="group mt-2 border-t pt-2">
+            <summary className="flex cursor-pointer items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-sidebar-foreground/70 hover:bg-sidebar-accent">
+              <Building2 className="h-4 w-4" />
+              Detalhe da franquia
+            </summary>
+            <div className="mt-1 flex flex-col gap-1">
+              {data?.franchises.map((franchise) => (
+                <Link key={franchise.id} to="/franquia/$franchiseId/$month" params={{ franchiseId: franchise.id, month }} className="rounded-md py-2 pl-10 pr-2 text-xs text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground">
+                  {franchise.display_name}
+                </Link>
+              ))}
+            </div>
+          </details>
         </nav>
         <div className="border-t p-3">
           <div className="truncate px-3 pb-2 text-xs text-muted-foreground">{email}</div>
@@ -77,7 +98,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           </Button>
         </div>
       </aside>
-      <main className="flex-1 overflow-x-hidden">{children}</main>
+      <main className="min-w-0 flex-1 overflow-x-hidden">{children}</main>
     </div>
   );
 }
