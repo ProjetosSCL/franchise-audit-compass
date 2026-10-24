@@ -15,4 +15,5 @@
 - `db/schemas.sql` is the single source of the data model. Never create tables or columns outside it.
 - Single user role: 4 sócios-gestores with identical full access to the 8 franquias. RLS policy on every table is `auth.uid() IS NOT NULL` (no per-franchise scoping). No public signup; email/password sign-in only at `/login`.
 - All protected pages live under `src/routes/_authenticated/`; public routes are `/login` and `/reset-password` only.
+- The dashboard reference month is a validated URL search parameter, and franchise detail navigation uses canonical franchise IDs from the shared dashboard query; this keeps links tied to real franchises and the selected period.
 - No dummy data anywhere; all processing is triggered by manual monthly upload (no cron, webhooks, Make/N8N/Zapier). Never store or display end-customer PII (CPF/CNPJ, phone, address) — LGPD.

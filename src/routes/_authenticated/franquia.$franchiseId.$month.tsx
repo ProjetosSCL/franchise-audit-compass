@@ -1,13 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-
 export const Route = createFileRoute("/_authenticated/franquia/$franchiseId/$month")({
   head: () => ({
     meta: [
@@ -46,20 +38,9 @@ function FranquiaDetalhe() {
           <Link to="/">Voltar ao Painel</Link>
         </Button>
       </div>
-      <Card>
-        <CardHeader>
-          <CardTitle>Período não processado</CardTitle>
-          <CardDescription>
-            As abas Resumo, Achados, OS sem correspondência, Triagem e
-            Bonificação serão habilitadas na Fase 2, junto com a importação e
-            o processamento das 9 regras de auditoria.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="text-sm text-muted-foreground">
-          Importe os arquivos deste mês em “Importar” para popular o detalhe
-          desta franquia.
-        </CardContent>
-      </Card>
+      <section className="border-t py-16 text-center">
+        <p className="text-sm text-muted-foreground">Nenhuma apuração disponível para este período.</p>
+      </section>
     </div>
   );
 }
