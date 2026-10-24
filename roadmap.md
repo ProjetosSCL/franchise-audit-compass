@@ -1,8 +1,8 @@
 # Acesso do SCL Audit
 
-- [ ] Conferir layout e navegação das seis páginas conforme ESTRUTURA e PROCESSO.
-- [ ] Ajustar Painel com mês de referência, oito cards vazios e Importar mês.
-- [ ] Validar navegação e placeholders existentes.
+- [x] Conferir layout e navegação das seis páginas conforme ESTRUTURA e PROCESSO.
+- [x] Ajustar Painel com mês de referência, oito cards vazios e Importar mês.
+- [ ] Validar navegação autenticada visualmente: depende de sessão disponível no Supabase externo; endereços e proteção verificados por testes.
 
 - [x] Conferir docs/ESTRUTURA.md, seções 2 e 5.
 - [x] Garantir buckets source-files e contestation-exports privados e acesso somente autenticado.
