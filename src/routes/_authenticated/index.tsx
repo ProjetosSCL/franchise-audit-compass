@@ -174,63 +174,63 @@ function Painel() {
             </Card>
           ))}
         </div>
-      ) : !hasAnyPeriod ? (
-        <Card>
-          <CardContent className="flex flex-col items-center gap-3 py-12 text-center">
-            <p className="text-sm text-muted-foreground">
+      ) : (
+        <>
+          {!hasAnyPeriod ? (
+            <p className="rounded-md border bg-muted/40 px-4 py-3 text-sm text-muted-foreground">
               Nenhuma apuração importada para {formatMonthLabel(month)}.
             </p>
-            <Button asChild>
-              <Link to="/importar">
-                <UploadCloud className="mr-2 h-4 w-4" />
-                Importar mês
-              </Link>
-            </Button>
-          </CardContent>
-        </Card>
-      ) : (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {franchises.map((franchise) => {
-            const period = periodsForMonth.find((p) => p.franchise_id === franchise.id);
-            return (
-              <Card key={franchise.id} className="transition-colors hover:bg-accent/40">
-                <CardHeader>
-                  <div className="flex items-center justify-between gap-2">
-                    <CardTitle className="text-base">{franchise.display_name}</CardTitle>
-                    <Badge
-                      variant={period?.status === "error" ? "destructive" : "secondary"}
-                    >
-                      {period ? STATUS_LABELS[period.status] ?? period.status : "Não importado"}
-                    </Badge>
-                  </div>
-                  <CardDescription>{franchise.code}</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-1 text-sm tabular-nums">
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Valor base</span>
-                    <span>{formatBRL(period?.total_valor_base)}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Valor pago</span>
-                    <span>{formatBRL(period?.total_valor_pago)}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Diferença</span>
-                    <span>{formatBRL(period?.total_difference)}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Achados abertos</span>
-                    <span>{period?.open_findings_count ?? 0}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Valor em risco</span>
-                    <span>{formatBRL(period?.value_at_risk)}</span>
-                  </div>
-                </CardContent>
-              </Card>
-            );
-          })}
-        </div>
+          ) : null}
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {franchises.map((franchise) => {
+              const period = periodsForMonth.find((p) => p.franchise_id === franchise.id);
+              return (
+                <Link
+                  key={franchise.id}
+                  to="/franquia/$franchiseId/$month"
+                  params={{ franchiseId: franchise.id, month }}
+                  className="block rounded-lg outline-none focus-visible:ring-2"
+                >
+                  <Card className="h-full transition-colors hover:bg-accent/40">
+                    <CardHeader>
+                      <div className="flex items-center justify-between gap-2">
+                        <CardTitle className="text-base">{franchise.display_name}</CardTitle>
+                        <Badge
+                          variant={period?.status === "error" ? "destructive" : "secondary"}
+                        >
+                          {period ? STATUS_LABELS[period.status] ?? period.status : "Não importado"}
+                        </Badge>
+                      </div>
+                      <CardDescription>{franchise.code}</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-1 text-sm tabular-nums">
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Valor base</span>
+                        <span>{formatBRL(period?.total_valor_base)}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Valor pago</span>
+                        <span>{formatBRL(period?.total_valor_pago)}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Diferença</span>
+                        <span>{formatBRL(period?.total_difference)}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Achados abertos</span>
+                        <span>{period?.open_findings_count ?? 0}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Valor em risco</span>
+                        <span>{formatBRL(period?.value_at_risk)}</span>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+              );
+            })}
+          </div>
+        </>
       )}
     </div>
   );
