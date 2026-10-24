@@ -1,5 +1,9 @@
 # Acesso do SCL Audit
 
+- [ ] Conferir layout e navegação das seis páginas conforme ESTRUTURA e PROCESSO.
+- [ ] Ajustar Painel com mês de referência, oito cards vazios e Importar mês.
+- [ ] Validar navegação e placeholders existentes.
+
 - [x] Conferir docs/ESTRUTURA.md, seções 2 e 5.
 - [x] Garantir buckets source-files e contestation-exports privados e acesso somente autenticado.
 - [x] Verificar login por e-mail/senha e proteção das seis páginas do app.
