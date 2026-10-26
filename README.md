@@ -1,14 +1,16 @@
-# Welcome to your Lovable project
+# Franchise Audit Compass
+
+Leia primeiro SKILL.md e README.md. Este app deve usar o projeto Supabase existente SCL Audit conectado a este projeto Lovable. O schema já foi aplicado; inspecione-o e não recrie tabelas nem altere o banco sem necessidade. Siga docs/PLANO.md e comece pela Fase 1: implemente login por e-mail e senha, rotas protegidas e layout base com navegação para Painel, Importar, Detalhe da franquia, Tendência, Contestação e Configurações. No Painel, inclua seletor de mês e oito cards vazios. Não crie dados fictícios nem habilite cadastro público. Respeite SKILL.md, docs/PAGINAS.md e docs/DEPARA.md.
 
 This project was built with [Lovable](https://lovable.dev).
 
 ## Build with Lovable
 
-Open your project in the [Lovable editor](https://lovable.dev) and keep building.
+Continue developing this project in the [Lovable editor](https://lovable.dev/projects/cb964668-bf12-47d6-8647-59d2b4ec9e26).
 
 - **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: connect the project to GitHub and every change made in Lovable is committed straight to your repository.
-- **Full ownership**: this code is yours. Push to your repository and your changes sync back into Lovable, ready for your next prompt.
+- **Stay in sync**: every change made in Lovable is committed straight to this repository.
+- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
 
 ## Development
 
@@ -20,10 +22,3 @@ cd <repository-name>
 npm i
 npm run dev
 ```
-
-## Built with
-
-- TanStack Start
-- TypeScript
-- React
-- Tailwind CSS
