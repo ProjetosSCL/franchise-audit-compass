@@ -110,7 +110,7 @@ function Painel() {
           </div>
         </div>
         <Button asChild>
-          <Link to="/importar">
+          <Link to="/importar" search={{ month }}>
             <UploadCloud className="mr-2 h-4 w-4" />
             Importar mês
           </Link>

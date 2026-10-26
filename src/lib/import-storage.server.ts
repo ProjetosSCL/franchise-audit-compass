@@ -1,13 +1,17 @@
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { normalizeName, type ImportResult } from "./import-types";
 import type { ParsedImport } from "./import-parser.server";
+import type { Database } from "@/integrations/supabase/types";
 
 type Metadata = { id: string; reference_month: string; storage_path: string; original_filename: string };
 export async function commitImport(meta: Metadata, parsed: ParsedImport, franchiseId: string | null, userId: string, saveAlias = false): Promise<ImportResult> {
-  const { data: periodId, error } = await supabaseAdmin.rpc("commit_month_import", {
-    p_file: meta, p_data: JSON.parse(JSON.stringify(parsed)), p_franchise_id: franchiseId ?? undefined,
+  // Generated RPC types don't express nullable UUID arguments; Postgres accepts null.
+  type Args = Database["public"]["Functions"]["commit_month_import"]["Args"];
+  const args: Omit<Args,"p_franchise_id"> & {p_franchise_id:string|null} = {
+    p_file: meta, p_data: JSON.parse(JSON.stringify(parsed)), p_franchise_id: franchiseId,
     p_user_id:userId,p_save_alias:saveAlias,
-  });
+  };
+  const { data: periodId, error } = await supabaseAdmin.rpc("commit_month_import", args as Args);
   if (error) {
     // Never log the parsed payload: it contains operational records.
     console.error("Import transaction failed", error.code);
