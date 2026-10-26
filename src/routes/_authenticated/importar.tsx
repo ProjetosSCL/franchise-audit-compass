@@ -90,7 +90,7 @@ function Importar() {
     <div className="mx-auto max-w-6xl space-y-6 p-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div><h1 className="text-2xl font-semibold">Importar mês</h1><p className="mt-1 text-sm text-muted-foreground">Workinfinity · Stone / Ton</p></div>
-        <div className="space-y-2"><Label htmlFor="reference-month">Mês de referência</Label><Input id="reference-month" type="month" value={month} disabled={busy || Boolean(associating)} onChange={e => {if (/^\d{4}-(0[1-9]|1[0-2])$/.test(e.target.value)) {setRecent([]);setErrors([]);void navigate({search:{month:e.target.value}});}} /></div>
+        <div className="space-y-2"><Label htmlFor="reference-month">Mês de referência</Label><Input id="reference-month" type="month" value={month} disabled={busy || Boolean(associating)} onChange={e => {if (/^\d{4}-(0[1-9]|1[0-2])$/.test(e.target.value)) {setRecent([]);setErrors([]);void navigate({search:{month:e.target.value}});}}} /></div>
       </div>
       <section className="border-t pt-6">
         <div className={`flex min-h-48 flex-col items-center justify-center gap-3 rounded-lg border-2 border-dashed p-6 ${dragging ? "border-primary bg-accent" : "border-border"}`} onDragOver={e => {e.preventDefault();if (!busy)setDragging(true);}} onDragLeave={() => setDragging(false)} onDrop={e => {e.preventDefault();setDragging(false);if (!busy)addFiles(Array.from(e.dataTransfer.files));}}>
