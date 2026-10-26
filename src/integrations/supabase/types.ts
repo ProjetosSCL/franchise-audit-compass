@@ -735,7 +735,16 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      commit_month_import: {
+        Args: {
+          p_data: Json
+          p_file: Json
+          p_franchise_id: string
+          p_save_alias?: boolean
+          p_user_id: string
+        }
+        Returns: string
+      }
     }
     Enums: {
       [_ in never]: never
