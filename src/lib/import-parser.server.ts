@@ -73,7 +73,12 @@ export function realignStone(row: Row) {
   if (shifted) {
     const base = numeric(row,"multa"), payment = numeric(row,"em_auditoria");
     if (base === null || payment === null) throw new Error("Linha Sem Retorno sem valores suficientes para realinhamento.");
-    return { multa: 0, em_auditoria: 0, valor_base_os: base, valor_pago: payment, status_pagamento: text(paid), was_realigned: true };
+    // Nas linhas deslocadas, Raio fica na coluna Abono, Abono na coluna Visitas e os dias até o atendimento na coluna Raio.
+    const abonoCell = get(row,"abono"), raioCell = get(row,"raio");
+    const shiftedColumns = /^R\d$/i.test(String(abonoCell ?? ""))
+      ? { raio: String(abonoCell).toUpperCase(), abono: text(get(row,"visitas")), visitas: null as number | null, dias_ate_atendimento: numberValue(raioCell) }
+      : {};
+    return { multa: 0, em_auditoria: 0, valor_base_os: base, valor_pago: payment, status_pagamento: text(paid), was_realigned: true, ...shiftedColumns };
   }
   return { multa: numeric(row,"multa"), em_auditoria: numeric(row,"em_auditoria"), valor_base_os: numeric(row,"valor_base_os","valor base"), valor_pago: numeric(row,"valor_pago"), status_pagamento: text(get(row,"status_pagamento")), was_realigned: false };
 }

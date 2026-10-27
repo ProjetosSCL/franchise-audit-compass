@@ -46,6 +46,12 @@ export const ingestMonthFiles = createServerFn({method:"POST"}).middleware([requ
         results.push(await storeImport(parsed,entry.name,month,context.userId,franchiseId));
       } catch (error) { errors.push({original_filename:entry.name,message:error instanceof Error ? error.message : "Não foi possível importar este arquivo."}); }
     }
+    // Processa a auditoria quando o período já tem as duas fontes. Falha aqui não desfaz a importação.
+    const periodIds = [...new Set(results.map(r => r.audit_period_id).filter((id): id is string => Boolean(id)))];
+    if (periodIds.length) {
+      const { processPeriodIfReady } = await import("./audit.server");
+      for (const id of periodIds) { try { await processPeriodIfReady(id); } catch { console.error("Auditoria automática não concluída para o período", id); } }
+    }
     return {results,errors};
   });
 

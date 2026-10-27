@@ -28,6 +28,10 @@ describe("Importação mensal",() => {
     expect(parsed.stone[0]).toMatchObject({os_key:"123",valor_base_os:100,valor_pago:40,status_pagamento:"Não pago",multa:0,em_auditoria:0,was_realigned:true});
     expect(parsed.realigned_rows_count).toBe(1);
   });
+  it("realinha raio, abono, visitas e dias nas linhas deslocadas",() => {
+    const row = realignStone({status:"(Tratamento) Sem Retorno",visitas:0,abono:"R4",raio:2,multa:56.26,valorbaseos:0,emauditoria:56.26,valorpago:"Pago: 100% (OS de maior valor na visita)"});
+    expect(row).toMatchObject({valor_base_os:56.26,valor_pago:56.26,raio:"R4",abono:"0",visitas:null,dias_ate_atendimento:2,was_realigned:true});
+  });
   it("não realinha Sem Retorno com pagamento numérico",() => {
     expect(realignStone({status:"(Tratamento) Sem Retorno",valorpago:"40,00",multa:5,emauditoria:0,valorbaseos:100}).was_realigned).toBe(false);
   });
