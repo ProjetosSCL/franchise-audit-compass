@@ -1,10 +1,11 @@
 # Acesso do SCL Audit
 
 ## Importação mensal
-- [ ] Implementar parsing seguro de CSV/XLSX, descarte de PII, seriais e realinhamento.
-- [ ] Persistir arquivos tratados e registros atomicamente no Supabase existente.
-- [ ] Implementar /importar com seleção múltipla, resultados e associação manual.
-- [ ] Testar parsing, persistência e fluxo disponível; indicar limitações da validação autenticada.
+- [x] Implementar parsing seguro de CSV/XLSX, descarte de PII, seriais e realinhamento (13 testes de regras passaram).
+- [x] Implementar persistência atômica de arquivos tratados e registros no Supabase existente; permissões da operação conferidas.
+- [x] Implementar /importar com seleção múltipla, resultados e associação manual via servidor do app, não Edge Functions.
+- [x] Conferir prévia sem erros, proteção de /importar e 16 testes de parsing/rotas.
+- [ ] Validar importação, associação e leitura de resultados com um mês real: pacote não contém CSV/XLSX reais e Supabase externo não disponibiliza sessão para testes autenticados.
 
 - [x] Conferir layout e navegação das seis páginas conforme ESTRUTURA e PROCESSO.
 - [x] Ajustar Painel com mês de referência, oito cards vazios e Importar mês.
