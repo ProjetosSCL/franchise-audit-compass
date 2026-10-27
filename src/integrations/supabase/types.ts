@@ -745,6 +745,94 @@ export type Database = {
         }
         Returns: string
       }
+      get_dashboard_cards: {
+        Args: { p_reference_month: string }
+        Returns: {
+          audit_period_id: string
+          display_name: string
+          franchise_id: string
+          open_findings_count: number
+          status: string
+          total_difference: number
+          total_validation_diff: number
+          total_valor_base: number
+          total_valor_pago: number
+          value_at_risk: number
+        }[]
+      }
+      get_findings: {
+        Args: {
+          p_audit_period_id: string
+          p_cidade?: string
+          p_grupo_servico?: string
+          p_review_status?: string
+          p_rule_id?: number
+          p_severity?: string
+          p_tecnico?: string
+        }
+        Returns: {
+          ai_contestation_text: string
+          ai_explanation: string
+          audit_period_id: string
+          cidade: string
+          data_atendimento: string
+          detail: string
+          diferenca: number
+          franchise_id: string
+          grupo_servico: string
+          id: string
+          observation: string
+          os: string
+          review_status: string
+          rule_id: number
+          rule_key: string
+          rule_name: string
+          severity: string
+          stonecode: string
+          tecnico: string
+          title: string
+          valor_base_os: number
+          valor_pago: number
+        }[]
+      }
+      get_franchise_reconciliation: {
+        Args: { p_audit_period_id: string }
+        Returns: {
+          consolidado_bobina: number
+          consolidado_stone: number
+          consolidado_ton: number
+          consolidado_total: number
+          consolidado_triagem: number
+          realigned_rows_count: number
+          total_difference: number
+          total_validation_diff: number
+          total_valor_base: number
+          total_valor_pago: number
+        }[]
+      }
+      get_trend_series: {
+        Args: { p_consolidated: boolean; p_franchise_id: string }
+        Returns: {
+          is_atypical_variation: boolean
+          pct_valor_base_retido: number
+          qtd_os: number
+          reference_month: string
+          retencao_por_regra: Json
+          value_at_risk: number
+        }[]
+      }
+      get_unmatched_os: {
+        Args: { p_audit_period_id: string }
+        Returns: {
+          classification: string
+          direction: string
+          key: string
+          os: string
+          status: string
+          valor_base_os: number
+          valor_pago: number
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never
