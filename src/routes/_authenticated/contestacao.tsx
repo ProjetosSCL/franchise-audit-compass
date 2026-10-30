@@ -26,7 +26,7 @@ function lastMonths(n: number) {
 
 function Contestacao() {
   const search = Route.useSearch();
-  const navigate = useNavigate();
+  const navigate = useNavigate({ from: Route.fullPath });
   const months = useMemo(() => lastMonths(12), []);
   const month = search.month ?? months[0]!;
   const load = useServerFn(getContestations);
